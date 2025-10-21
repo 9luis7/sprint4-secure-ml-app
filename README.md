@@ -51,15 +51,17 @@ graph TD
     
     subgraph "Infraestrutura do Servidor Protegida"
         WAF --> AppServer["🖥️ Servidor da Aplicação"];
-        subgraph AppServer
+        subgraph "Camadas de Proteção"
             RateLimiter["⏱️ Rate Limiter (Anti-DoS)"];
             URLValidator["✅ Validador de URL (Anti-SSRF)"];
             MLModel["🧠 Modelo de ML"];
         end
-        AppServer --> RateLimiter --> URLValidator --> MLModel;
+        AppServer --> RateLimiter;
+        RateLimiter --> URLValidator;
+        URLValidator --> MLModel;
     end
 
-    subgraph "Resiliência"
+    subgraph "Resiliência e Backup"
         BackupService["☁️ Serviço de Backup Externo"];
     end
 
