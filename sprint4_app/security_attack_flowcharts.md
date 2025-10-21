@@ -8,18 +8,18 @@ A aplicação Flask em `app.py` possui uma vulnerabilidade SSRF no endpoint `/pr
 ```mermaid
 graph TD;
     subgraph "Internet"
-        Attacker[<i class='fa fa-user-secret'></i> Atacante];
+        Attacker["🕵️ Atacante"];
     end
 
     subgraph "Infraestrutura do Servidor"
-        WebApp[<i class='fa fa-server'></i> Nosso App Web (Vulnerável)];
+        WebApp["🖥️ Nosso App Web (Vulnerável)"];
         subgraph "Rede Interna (localhost)"
-            AdminPanel[<i class='fa fa-database'></i> Painel Admin Interno];
+            AdminPanel["🗄️ Painel Admin Interno"];
         end
     end
 
-    Attacker -- "1. Envia URL maliciosa:<br/>/predict?image_url=http://127.0.0.1/admin" --> WebApp;
-    WebApp -- "2. Requisição Forjada (SSRF)<br/>O App acessa o recurso interno" --> AdminPanel;
+    Attacker -- "1. Envia URL maliciosa: /predict?image_url=http://127.0.0.1/admin" --> WebApp;
+    WebApp -- "2. Requisição Forjada (SSRF) - O App acessa o recurso interno" --> AdminPanel;
 
     style Attacker fill:#d9534f,stroke:#333,stroke-width:2px
     style WebApp fill:#f0ad4e,stroke:#333,stroke-width:2px
@@ -59,17 +59,17 @@ A aplicação Flask pode ser sobrecarregada por múltiplas requisições simult�
 graph TD;
     subgraph "Atacantes (Botnet)"
         direction LR
-        Bot1[<i class='fa fa-robot'></i> Bot 1];
-        Bot2[<i class='fa fa-robot'></i> Bot 2];
-        Bot3[<i class='fa fa-robot'></i> Bot 3];
+        Bot1["🤖 Bot 1"];
+        Bot2["🤖 Bot 2"];
+        Bot3["🤖 Bot 3"];
     end
 
     subgraph "Infraestrutura"
-        WebApp[<i class='fa fa-server'></i> Nosso App Web];
-        Resources[<i class='fa fa-microchip'></i> Recursos Esgotados<br/>(CPU/RAM)];
+        WebApp["🖥️ Nosso App Web"];
+        Resources["💾 Recursos Esgotados (CPU/RAM)"];
     end
 
-    User[<i class='fa fa-user'></i> Usuário Legítimo];
+    User["👤 Usuário Legítimo"];
 
     Bot1 & Bot2 & Bot3 -- "1. Requisições em Massa" --> WebApp;
     WebApp -- "2. Sobrecarga" --> Resources;
@@ -113,15 +113,15 @@ A aplicação Flask pode ser comprometida através de vulnerabilidades que permi
 
 ```mermaid
 graph TD;
-    Attacker[<i class='fa fa-user-secret'></i> Atacante] --> Exploit[1. Explora Vulnerabilidade no Servidor];
-    Exploit --> Server[<i class='fa fa-server'></i> Servidor da Aplicação];
-    Attacker -->|2. Injeta Payload| Ransomware[<i class='fa fa-skull-crossbones'></i> Malware Ransomware];
-    Ransomware -->|3. Executa no| Server;
+    Attacker["🕵️ Atacante"] --> Exploit["1. Explora Vulnerabilidade no Servidor"];
+    Exploit --> Server["🖥️ Servidor da Aplicação"];
+    Attacker -->|"2. Injeta Payload"| Ransomware["💀 Malware Ransomware"];
+    Ransomware -->|"3. Executa no"| Server;
 
     subgraph "Arquivos no Servidor"
         direction LR
-        AppFile[<i class='fa fa-file-code'></i> app.py];
-        ModelFile[<i class='fa fa-brain'></i> model.pkl];
+        AppFile["📄 app.py"];
+        ModelFile["🧠 model.pkl"];
     end
 
     Server --> Ransomware;
@@ -129,8 +129,8 @@ graph TD;
 
     subgraph "Resultado do Ataque"
         direction LR
-        EncryptedApp[<i class='fa fa-file-lock'></i> app.py.locked];
-        EncryptedModel[<i class='fa fa-file-lock'></i> model.pkl.locked];
+        EncryptedApp["🔒 app.py.locked"];
+        EncryptedModel["🔒 model.pkl.locked"];
     end
     
     AppFile --> EncryptedApp;
@@ -188,20 +188,20 @@ A aplicação agora possui múltiplas camadas de proteção contra os ataques id
 
 ```mermaid
 graph TD
-    User[<i class='fa fa-user'></i> Usuário / Atacante] --> WAF[<i class='fa fa-shield-alt'></i> WAF / Firewall];
+    User["👤 Usuário / Atacante"] --> WAF["🛡️ WAF / Firewall"];
     
     subgraph "Infraestrutura do Servidor Protegida"
-        WAF --> AppServer[<i class='fa fa-server'></i> Servidor da Aplicação];
+        WAF --> AppServer["🖥️ Servidor da Aplicação"];
         subgraph AppServer
-            RateLimiter[<i class='fa fa-hourglass-half'></i> Rate Limiter (Anti-DoS)];
-            URLValidator[<i class='fa fa-check-circle'></i> Validador de URL (Anti-SSRF)];
-            MLModel[<i class='fa fa-brain'></i> Modelo de ML];
+            RateLimiter["⏱️ Rate Limiter (Anti-DoS)"];
+            URLValidator["✅ Validador de URL (Anti-SSRF)"];
+            MLModel["🧠 Modelo de ML"];
         end
         AppServer --> RateLimiter --> URLValidator --> MLModel;
     end
 
     subgraph "Resiliência"
-        BackupService[<i class='fa fa-cloud-upload-alt'></i> Serviço de Backup Externo];
+        BackupService["☁️ Serviço de Backup Externo"];
     end
 
     AppServer -- "Backups Regulares" --> BackupService;
