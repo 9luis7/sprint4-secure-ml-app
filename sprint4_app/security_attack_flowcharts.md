@@ -21,9 +21,9 @@ graph TD;
     Attacker -- "1. Envia URL maliciosa: /predict?image_url=http://127.0.0.1/admin" --> WebApp;
     WebApp -- "2. Requisição Forjada (SSRF) - O App acessa o recurso interno" --> AdminPanel;
 
-    style Attacker fill:#d9534f,stroke:#333,stroke-width:2px
-    style WebApp fill:#f0ad4e,stroke:#333,stroke-width:2px
-    style AdminPanel fill:#5bc0de,stroke:#333,stroke-width:2px
+    style Attacker fill:#e74c3c,stroke:#c0392b,stroke-width:3px,color:#fff
+    style WebApp fill:#f39c12,stroke:#e67e22,stroke-width:3px,color:#fff
+    style AdminPanel fill:#3498db,stroke:#2980b9,stroke-width:3px,color:#fff
 ```
 
 ## Explicação do Ataque
@@ -73,12 +73,12 @@ graph TD;
 
     Bot1 & Bot2 & Bot3 -- "1. Requisições em Massa" --> WebApp;
     WebApp -- "2. Sobrecarga" --> Resources;
-    User -.->| "3. Acesso Negado!" |WebApp;
+    User -.->|"3. Acesso Negado!"| WebApp;
 
-    style Bot1 fill:#d9534f,stroke:#333,stroke-width:2px
-    style Bot2 fill:#d9534f,stroke:#333,stroke-width:2px
-    style Bot3 fill:#d9534f,stroke:#333,stroke-width:2px
-    style User fill:#5cb85c,stroke:#333,stroke-width:2px
+    style Bot1 fill:#e74c3c,stroke:#c0392b,stroke-width:3px,color:#fff
+    style Bot2 fill:#e74c3c,stroke:#c0392b,stroke-width:3px,color:#fff
+    style Bot3 fill:#e74c3c,stroke:#c0392b,stroke-width:3px,color:#fff
+    style User fill:#27ae60,stroke:#229954,stroke-width:3px,color:#fff
 ```
 
 ## Explicação do Ataque DoS
@@ -136,10 +136,10 @@ graph TD;
     AppFile --> EncryptedApp;
     ModelFile --> EncryptedModel;
 
-    style Attacker fill:#d9534f,stroke:#333,stroke-width:2px
-    style Ransomware fill:#d9534f,stroke:#333,stroke-width:2px
-    style EncryptedApp fill:#777,stroke:#333,stroke-width:2px
-    style EncryptedModel fill:#777,stroke:#333,stroke-width:2px
+    style Attacker fill:#e74c3c,stroke:#c0392b,stroke-width:3px,color:#fff
+    style Ransomware fill:#8e44ad,stroke:#7d3c98,stroke-width:3px,color:#fff
+    style EncryptedApp fill:#34495e,stroke:#2c3e50,stroke-width:3px,color:#fff
+    style EncryptedModel fill:#34495e,stroke:#2c3e50,stroke-width:3px,color:#fff
 ```
 
 ## Explicação do Ataque de Ransomware
@@ -206,10 +206,10 @@ graph TD
 
     AppServer -- "Backups Regulares" --> BackupService;
 
-    style User fill:#5cb85c,stroke:#333
-    style WAF fill:#5bc0de,stroke:#333
-    style RateLimiter fill:#f0ad4e,stroke:#333
-    style URLValidator fill:#f0ad4e,stroke:#333
+    style User fill:#27ae60,stroke:#229954,stroke-width:3px,color:#fff
+    style WAF fill:#3498db,stroke:#2980b9,stroke-width:3px,color:#fff
+    style RateLimiter fill:#f39c12,stroke:#e67e22,stroke-width:3px,color:#fff
+    style URLValidator fill:#e74c3c,stroke:#c0392b,stroke-width:3px,color:#fff
 ```
 
 ## Explicação da Arquitetura de Segurança
