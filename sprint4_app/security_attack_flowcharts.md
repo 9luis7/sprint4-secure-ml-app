@@ -192,24 +192,29 @@ graph TD
     
     subgraph "Infraestrutura do Servidor Protegida"
         WAF --> AppServer["🖥️ Servidor da Aplicação"];
-        subgraph AppServer
+        subgraph "Camadas de Proteção"
             RateLimiter["⏱️ Rate Limiter (Anti-DoS)"];
             URLValidator["✅ Validador de URL (Anti-SSRF)"];
             MLModel["🧠 Modelo de ML"];
         end
-        AppServer --> RateLimiter --> URLValidator --> MLModel;
+        AppServer --> RateLimiter;
+        RateLimiter --> URLValidator;
+        URLValidator --> MLModel;
     end
 
-    subgraph "Resiliência"
+    subgraph "Resiliência e Backup"
         BackupService["☁️ Serviço de Backup Externo"];
     end
 
-    AppServer -- "Backups Regulares" --> BackupService;
+    AppServer -.->|"Backups Regulares"| BackupService;
 
-    style User fill:#27ae60,stroke:#229954,stroke-width:3px,color:#fff
-    style WAF fill:#3498db,stroke:#2980b9,stroke-width:3px,color:#fff
-    style RateLimiter fill:#f39c12,stroke:#e67e22,stroke-width:3px,color:#fff
-    style URLValidator fill:#e74c3c,stroke:#c0392b,stroke-width:3px,color:#fff
+    style User fill:#2ecc71,stroke:#27ae60,stroke-width:2px,color:#fff
+    style WAF fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    style AppServer fill:#95a5a6,stroke:#7f8c8d,stroke-width:2px,color:#fff
+    style RateLimiter fill:#e67e22,stroke:#d35400,stroke-width:2px,color:#fff
+    style URLValidator fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
+    style MLModel fill:#9b59b6,stroke:#8e44ad,stroke-width:2px,color:#fff
+    style BackupService fill:#34495e,stroke:#2c3e50,stroke-width:2px,color:#fff
 ```
 
 ## Explicação da Arquitetura de Segurança
