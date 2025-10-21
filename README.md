@@ -8,17 +8,18 @@
 > **Projeto educacional de segurança cibernética** demonstrando vulnerabilidades comuns em aplicações web e suas respectivas mitigações.
 
 ## 📋 Índice
+- [🎯 O Desafio (A Aplicação Vulnerável)](#-o-desafio-a-aplicação-vulnerável)
+- [🚨 Prova do Crime (Ataques Executados)](#-prova-do-crime-ataques-executados)
+- [🛡️ A Blindagem (Proteções Implementadas)](#️-a-blindagem-proteções-implementadas)
+- [🧪 Validação (O "Antes e Depois")](#-validação-o-antes-e-depois)
+- [📊 Arquitetura e Resiliência (Defesa em Profundidade)](#-arquitetura-e-resiliência-defesa-em-profundidade)
 - [👥 Equipe](#-equipe)
-- [🎯 Visão Geral](#-visão-geral)
-- [🏗️ Arquitetura](#️-arquitetura)
-- [🚨 Vulnerabilidades](#-vulnerabilidades)
-- [🛡️ Proteções Implementadas](#️-proteções-implementadas)
-- [📊 Diagramas de Segurança](#-diagramas-de-segurança)
 - [🚀 Como Executar](#-como-executar)
-- [🧪 Testes de Segurança](#-testes-de-segurança)
 - [📚 Recursos](#-recursos)
 
-## 👥 Equipe
+## 🎯 O Desafio (A Aplicação Vulnerável)
+
+### 👥 Equipe
 | Nome | RM | Função |
 |------|----|---------| 
 | **Luis Fernando de Oliveira Salgado** | 561401 | Desenvolvimento & Segurança |
@@ -26,10 +27,8 @@
 | **Lucca Phelipe Masini** | 564121 | Documentação & Testes |
 | **Igor Paixão Sarak** | 563726 | Arquitetura & Mitigações |
 
-## 🎯 Visão Geral
-Este projeto contém uma aplicação Flask de machine learning com **vulnerabilidades de segurança intencionais** para fins educacionais. O objetivo é demonstrar diferentes tipos de ataques cibernéticos e suas respectivas mitigações, implementando uma arquitetura de **defesa em profundidade**.
-
-## 🏗️ Arquitetura
+### 🎯 O Cenário
+Este projeto nasceu de um **desafio educacional**: criar uma aplicação Flask de machine learning que **intencionalmente** possuísse vulnerabilidades de segurança para fins de estudo. O objetivo era demonstrar diferentes tipos de ataques cibernéticos e suas respectivas mitigações, implementando uma arquitetura de **defesa em profundidade**.
 
 ### 📁 Estrutura do Projeto
 ```
@@ -75,30 +74,34 @@ graph TD
     style BackupService fill:#34495e,stroke:#2c3e50,stroke-width:2px,color:#fff
 ```
 
-## 🚨 Vulnerabilidades
+## 🚨 Prova do Crime (Ataques Executados)
 
-### 1. 🛡️ SSRF (Server-Side Request Forgery) - **PROTEGIDO**
+O projeto começou identificando as **três falhas principais** que tornavam a aplicação vulnerável. Cada uma representava um vetor de ataque diferente, demonstrando como vulnerabilidades aparentemente simples podem ser exploradas de forma devastadora.
+
+### 1. 🕵️ SSRF (Server-Side Request Forgery) - **VULNERABILIDADE PURA**
 - **Endpoint afetado**: `/predict`
 - **Parâmetro vulnerável**: `image_url`
-- **Proteção implementada**: Validação de domínios permitidos
-- **Domínios permitidos**: `i.imgur.com`, `images.pexels.com`
-- **Validações**: Esquema HTTP/HTTPS + Whitelist de domínios
-- **Payload bloqueado**: `http://localhost:5000/predict?image_url=http://127.0.0.1:8080/admin`
+- **Vulnerabilidade**: Aplicação fazia requisições HTTP para qualquer URL fornecida
+- **Risco**: Acesso a recursos internos do servidor
+- **Payload de ataque**: `http://localhost:5000/predict?image_url=http://127.0.0.1:8080/admin`
+- **Consequência**: Atacante podia acessar painel admin interno
 
-### 2. 🛡️ DoS (Denial of Service) - **PROTEGIDO**
-- **Proteção implementada**: Rate limiting com Flask-Limiter
-- **Limite**: 10 requisições por minuto por IP
+### 2. 💥 DoS (Denial of Service) - **VULNERABILIDADE PURA**
+- **Causa**: Ausência de rate limiting + carga de trabalho pesada
 - **Simulação**: `time.sleep(0.5)` em cada requisição
 - **Risco**: Sobrecarga do servidor com requisições simultâneas
-- **Impacto**: Indisponibilidade do serviço (agora protegido)
+- **Impacto**: Indisponibilidade total do serviço
+- **Consequência**: Usuários legítimos bloqueados
 
-### 3. 🚨 Ransomware - **MONITORADO**
+### 3. 🔒 Ransomware - **VULNERABILIDADE PURA**
 - **Vetor**: Exploração das vulnerabilidades anteriores
 - **Alvo**: Arquivos críticos (`app.py`, `model.pkl`)
 - **Consequência**: Criptografia e inutilização dos arquivos
-- **Proteção**: Backups regulares e monitoramento
+- **Risco**: Perda total de dados e aplicação
 
-## 🛡️ Proteções Implementadas
+## 🛡️ A Blindagem (Proteções Implementadas)
+
+Após o sucesso dos ataques, implementamos as correções para fechar as brechas. Cada vulnerabilidade recebeu sua respectiva mitigação, transformando a aplicação em um sistema robusto e seguro.
 
 ### ✅ **Rate Limiting (Anti-DoS)**
 ```python
@@ -165,7 +168,9 @@ python internal_service.py
 | **Endpoint API** | `/predict?image_url=<URL>` | Predição de ML com validações |
 | **Admin Interno** | `/admin` | Endpoint que deveria ser privado |
 
-## 🧪 Testes de Segurança
+## 🧪 Validação (O "Antes e Depois")
+
+Esta seção serve para **provar que as mitigações funcionaram**. Os testes demonstram claramente a diferença entre o estado vulnerável e o estado protegido da aplicação.
 
 ### 🔍 Teste de SSRF (Bloqueado)
 ```bash
@@ -175,6 +180,7 @@ curl "http://localhost:5000/predict?image_url=https://i.imgur.com/image.jpg"
 # ❌ URL bloqueada (deve retornar 403)
 curl "http://localhost:5000/predict?image_url=http://127.0.0.1:8080/admin"
 ```
+**Resultado**: O curl da URL bloqueada agora retorna **403 Forbidden**, impedindo acesso a recursos internos.
 
 ### 🚫 Teste de DoS (Rate Limiting)
 ```bash
@@ -185,6 +191,7 @@ for i in {1..15}; do
 done
 # Após 10 requisições: 429 Too Many Requests
 ```
+**Resultado**: O teste de rajada agora resulta em **429 Too Many Requests** após exceder o limite de 10 requisições por minuto.
 
 ### 📊 Monitoramento
 ```bash
@@ -195,7 +202,7 @@ tail -f app.log
 htop
 ```
 
-## 📊 Diagramas de Segurança
+## 📊 Arquitetura e Resiliência (Defesa em Profundidade)
 
 ### 🎯 Ataques Identificados
 Para visualizar os diagramas detalhados de cada tipo de ataque, consulte:
@@ -208,6 +215,9 @@ A arquitetura implementada segue o princípio de **defesa em profundidade**:
 2. **Rate Limiter** - Controle de requisições
 3. **Validador URL** - Prevenção de SSRF
 4. **Backup Service** - Resiliência contra ransomware
+
+### 🔒 Resiliência contra Ransomware
+Para o Ransomware, a solução é a **Resiliência Arquitetônica** baseada em Backups. O diagrama final ilustra esse princípio, mostrando como o sistema de backup externo protege contra a criptografia de arquivos críticos, garantindo a recuperação mesmo em caso de ataque bem-sucedido.
 
 ## 📚 Recursos
 
