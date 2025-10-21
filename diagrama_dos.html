@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            font-family: Arial, sans-serif; 
+            background: white; 
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .mermaid { 
+            text-align: center; 
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mermaid svg {
+            width: 1200px !important;
+            height: 800px !important;
+            max-width: none !important;
+            max-height: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="mermaid">
+graph TD;
+    subgraph "Atacantes (Botnet)"
+        direction LR
+        Bot1["🤖 Bot 1"];
+        Bot2["🤖 Bot 2"];
+        Bot3["🤖 Bot 3"];
+    end
+
+    subgraph "Infraestrutura"
+        WebApp["🖥️ Nosso App Web"];
+        Resources["💾 Recursos Esgotados (CPU/RAM)"];
+    end
+
+    User["👤 Usuário Legítimo"];
+
+    Bot1 & Bot2 & Bot3 -- "1. Requisições em Massa" --> WebApp;
+    WebApp -- "2. Sobrecarga" --> Resources;
+    User -.->|"3. Acesso Negado!"| WebApp;
+
+    style Bot1 fill:#e74c3c,stroke:#c0392b,stroke-width:3px,color:#fff
+    style Bot2 fill:#e74c3c,stroke:#c0392b,stroke-width:3px,color:#fff
+    style Bot3 fill:#e74c3c,stroke:#c0392b,stroke-width:3px,color:#fff
+    style User fill:#27ae60,stroke:#229954,stroke-width:3px,color:#fff
+    </div>
+    
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true, 
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: false,
+                htmlLabels: true
+            },
+            themeVariables: {
+                fontSize: '20px'
+            }
+        });
+    </script>
+</body>
+</html>

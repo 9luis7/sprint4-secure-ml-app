@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprint 4: Aplicação Segura de Inferência de ML</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        @page {
+            size: A4;
+            margin: 1.5cm;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.7;
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .page {
+            page-break-after: always;
+            min-height: 27cm;
+            padding: 2.5cm;
+            box-sizing: border-box;
+            background: white;
+            border-radius: 20px;
+            margin: 1cm;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+        }
+        
+        .page:last-child {
+            page-break-after: avoid;
+        }
+        
+        .cover {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            position: relative;
+        }
+        
+        .cover::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102,126,234,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .title {
+            font-size: 2.8em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5em;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .subtitle {
+            font-size: 1.4em;
+            color: #5a6c7d;
+            margin-bottom: 2.5em;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .team-table {
+            width: 85%;
+            border-collapse: collapse;
+            margin: 2.5em auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            background: white;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .team-table th,
+        .team-table td {
+            padding: 18px 20px;
+            text-align: left;
+            border: none;
+        }
+        
+        .team-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .team-table tr:nth-child(even) {
+            background: linear-gradient(135deg, #f8f9ff, #e8f2ff);
+        }
+        
+        .team-table tr:hover {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+        
+        .section-title {
+            font-size: 2.2em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5em;
+            position: relative;
+            padding-bottom: 0.8em;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        
+        .vulnerability-box {
+            background: linear-gradient(135deg, #fff5f5, #ffeaea);
+            border-left: 6px solid #e74c3c;
+            padding: 2em;
+            margin: 2em 0;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .vulnerability-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(231,76,60,0.1) 0%, transparent 70%);
+        }
+        
+        .vulnerability-title {
+            font-weight: 700;
+            color: #e74c3c;
+            font-size: 1.4em;
+            margin-bottom: 1em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .code-block {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: #ecf0f1;
+            padding: 2em;
+            border-radius: 15px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.95em;
+            overflow-x: auto;
+            margin: 2em 0;
+            box-shadow: 0 10px 30px rgba(44,62,80,0.3);
+            border: 1px solid rgba(52,73,94,0.2);
+            position: relative;
+        }
+        
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e74c3c;
+            box-shadow: 20px 0 0 #f39c12, 40px 0 0 #27ae60;
+        }
+        
+        .code-block code {
+            padding-left: 70px;
+            display: block;
+        }
+        
+        .mermaid {
+            text-align: center;
+            margin: 2.5em 0;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 0.5em;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.05);
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .mermaid img {
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 550px !important;
+            object-fit: fill !important;
+            object-position: center !important;
+            display: block !important;
+            transform: scale(1.5) !important;
+            transform-origin: center !important;
+        }
+        
+        .mermaid img:hover {
+            transform: scale(1.02);
+        }
+        
+        .architecture-explanation {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            border: 2px solid #27ae60;
+            padding: 2em;
+            border-radius: 20px;
+            margin: 2em 0;
+            box-shadow: 0 10px 30px rgba(39,174,96,0.15);
+            position: relative;
+        }
+        
+        .architecture-explanation::before {
+            content: '🛡️';
+            position: absolute;
+            top: -15px;
+            left: 30px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .architecture-item {
+            margin: 1em 0;
+            padding-left: 1.5em;
+            position: relative;
+        }
+        
+        .architecture-item::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .conclusion {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 2px solid #ffc107;
+            padding: 2.5em;
+            border-radius: 20px;
+            margin: 2.5em 0;
+            font-style: italic;
+            box-shadow: 0 15px 35px rgba(255,193,7,0.2);
+            position: relative;
+        }
+        
+        .conclusion::before {
+            content: '💡';
+            position: absolute;
+            top: -15px;
+            left: 30px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .improvements {
+            background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+            border: 2px solid #17a2b8;
+            padding: 2em;
+            border-radius: 20px;
+            margin: 2em 0;
+            box-shadow: 0 10px 30px rgba(23,162,184,0.15);
+            position: relative;
+        }
+        
+        .improvements::before {
+            content: '🚀';
+            position: absolute;
+            top: -15px;
+            left: 30px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .improvements h4 {
+            color: #17a2b8;
+            margin-top: 0;
+            font-weight: 600;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            padding: 0.3em 0.6em;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(255,193,7,0.3);
+        }
+        
+        h2 {
+            font-size: 1.6em;
+            font-weight: 600;
+            color: #34495e;
+            margin-top: 2em;
+            margin-bottom: 1em;
+            position: relative;
+        }
+        
+        h2::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        
+        h3 {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-top: 1.5em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+            position: relative;
+        }
+        
+        li::marker {
+            color: #667eea;
+        }
+        
+        p {
+            margin: 1em 0;
+            text-align: justify;
+        }
+        
+        strong {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        code {
+            background: rgba(102,126,234,0.1);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            color: #667eea;
+            font-weight: 500;
+        }
+        
+        /* Animations */
+        .page {
+            animation: slideIn 0.6s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .vulnerability-box,
+        .architecture-explanation,
+        .conclusion,
+        .improvements {
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Página 1: Capa & Equipe -->
+    <div class="page">
+        <div class="cover">
+            <div class="title">Sprint 4: Aplicação Segura de Inferência de ML</div>
+            <div class="subtitle">Proteção contra SSRF, DoS e Resiliência a Ransomware</div>
+            
+            <table class="team-table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>RM</th>
+                        <th>Função</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Luis Fernando de Oliveira Salgado</strong></td>
+                        <td>561401</td>
+                        <td>Desenvolvimento & Segurança</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bernardo Braga Perobeli</strong></td>
+                        <td>562468</td>
+                        <td>Análise de Vulnerabilidades</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lucca Phelipe Masini</strong></td>
+                        <td>564121</td>
+                        <td>Documentação & Testes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Igor Paixão Sarak</strong></td>
+                        <td>563726</td>
+                        <td>Arquitetura & Mitigações</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Página 2: O Desafio & Prova do Crime -->
+    <div class="page">
+        <h1 class="section-title">O Desafio & Prova do Crime</h1>
+        
+        <p>Este projeto nasceu de um <strong>desafio educacional</strong>: criar uma aplicação Flask de machine learning que <strong>intencionalmente</strong> possuísse vulnerabilidades de segurança para fins de estudo. O objetivo era demonstrar diferentes tipos de ataques cibernéticos e suas respectivas mitigações, implementando uma arquitetura de <strong>defesa em profundidade</strong>.</p>
+        
+        <h2>Vulnerabilidades Identificadas</h2>
+        
+        <div class="vulnerability-box">
+            <div class="vulnerability-title">1. 🕵️ SSRF (Server-Side Request Forgery)</div>
+            <p><strong>Endpoint afetado:</strong> <code>/predict</code><br>
+            <strong>Parâmetro vulnerável:</strong> <code>image_url</code><br>
+            <strong>Vulnerabilidade:</strong> Aplicação fazia requisições HTTP para qualquer URL fornecida<br>
+            <strong>Risco:</strong> Acesso a recursos internos do servidor<br>
+            <strong>Payload de ataque:</strong> <code>http://localhost:5000/predict?image_url=http://127.0.0.1:8080/admin</code></p>
+        </div>
+        
+        <div class="mermaid">
+            <img src="diagrama_ssrf.png" alt="Diagrama SSRF - Server-Side Request Forgery" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+        
+        <div class="vulnerability-box">
+            <div class="vulnerability-title">2. 💥 DoS (Denial of Service)</div>
+            <p><strong>Causa:</strong> Ausência de rate limiting + carga de trabalho pesada<br>
+            <strong>Simulação:</strong> <code>time.sleep(0.5)</code> em cada requisição<br>
+            <strong>Risco:</strong> Sobrecarga do servidor com requisições simultâneas<br>
+            <strong>Impacto:</strong> Indisponibilidade total do serviço</p>
+        </div>
+        
+        <div class="mermaid">
+            <img src="diagrama_dos.png" alt="Diagrama DoS - Denial of Service" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+        
+        <div class="vulnerability-box">
+            <div class="vulnerability-title">3. 🔒 Ransomware</div>
+            <p><strong>Vetor:</strong> Exploração das vulnerabilidades anteriores<br>
+            <strong>Alvo:</strong> Arquivos críticos (<code>app.py</code>, <code>model.pkl</code>)<br>
+            <strong>Consequência:</strong> Criptografia e inutilização dos arquivos<br>
+            <strong>Risco:</strong> Perda total de dados e aplicação</p>
+        </div>
+        
+        <div class="mermaid">
+            <img src="diagrama_ransomware.png" alt="Diagrama Ransomware - Criptografia de Arquivos" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+    </div>
+
+    <!-- Página 3: A Blindagem (As Implementações de 60 Pontos) -->
+    <div class="page">
+        <h1 class="section-title">A Blindagem - Proteções Implementadas</h1>
+        
+        <p>Após o sucesso dos ataques, implementamos as correções para fechar as brechas. Cada vulnerabilidade recebeu sua respectiva mitigação, transformando a aplicação em um sistema robusto e seguro.</p>
+        
+        <h2>✅ Rate Limiting (Anti-DoS)</h2>
+        <div class="code-block">
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["10 per minute"],
+    storage_uri="memory://"
+)
+        </div>
+        <p><strong>Limite:</strong> <span class="highlight">10 requisições por minuto</span> por IP<br>
+        <strong>Resposta:</strong> 429 Too Many Requests quando exceder limite</p>
+        
+        <h2>✅ Validação de URL (Anti-SSRF)</h2>
+        <div class="code-block">
+# Whitelist de domínios permitidos
+ALLOWED_DOMAINS = {'i.imgur.com', 'images.pexels.com'}
+
+# Validação de esquema e domínio
+if parsed_url.scheme not in ['http', 'https']:
+    return jsonify({'error': 'URL inválida ou não permitida.'}), 403
+
+if parsed_url.netloc not in ALLOWED_DOMAINS:
+    return jsonify({'error': 'URL inválida ou não permitida.'}), 403
+        </div>
+        <p><strong>Lista branca de domínios:</strong> <span class="highlight">i.imgur.com, images.pexels.com</span><br>
+        <strong>Resposta:</strong> 403 Forbidden para URLs não permitidas</p>
+        
+        <h2>✅ Simulação de Carga</h2>
+        <div class="code-block">
+# Simulação de processamento pesado
+time.sleep(0.5)  # 500ms de delay por requisição
+        </div>
+        
+        <h2>🧪 Validação dos Testes</h2>
+        <p><strong>Teste SSRF:</strong> ✅ URL bloqueada agora retorna <strong>403 Forbidden</strong><br>
+        <strong>Teste DoS:</strong> ✅ Após 10 requisições: <strong>429 Too Many Requests</strong><br>
+        <strong>Resultado:</strong> Vulnerabilidades <strong>completamente mitigadas</strong></p>
+    </div>
+
+    <!-- Página 4: Arquitetura Final Segura -->
+    <div class="page">
+        <h1 class="section-title">Arquitetura Final Segura</h1>
+        
+        <div class="mermaid">
+            <img src="diagrama_arquitetura.png" alt="Diagrama da Arquitetura Final Segura - Defesa em Profundidade" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+        
+        <h2>Explicação da Arquitetura de Segurança</h2>
+        
+        <div class="architecture-explanation">
+            <h3>1. 🛡️ WAF (Web Application Firewall) - Primeira Camada</h3>
+            <div class="architecture-item">
+                <strong>Função:</strong> Filtro inicial de tráfego malicioso<br>
+                <strong>Proteção:</strong> Bloqueia ataques conhecidos antes de chegar à aplicação<br>
+                <strong>Benefícios:</strong> Reduz carga na aplicação e protege contra vulnerabilidades
+            </div>
+            
+            <h3>2. ⏱️ Rate Limiter (Anti-DoS) - Segunda Camada</h3>
+            <div class="architecture-item">
+                <strong>Implementação:</strong> Flask-Limiter<br>
+                <strong>Limite:</strong> 10 requisições por minuto por IP<br>
+                <strong>Proteção:</strong> Previne sobrecarga do servidor<br>
+                <strong>Resposta:</strong> 429 Too Many Requests quando exceder limite
+            </div>
+            
+            <h3>3. ✅ Validador de URL (Anti-SSRF) - Terceira Camada</h3>
+            <div class="architecture-item">
+                <strong>Implementação:</strong> Validação de domínios permitidos<br>
+                <strong>Whitelist:</strong> i.imgur.com, images.pexels.com<br>
+                <strong>Proteção:</strong> Bloqueia acesso a recursos internos<br>
+                <strong>Resposta:</strong> 403 Forbidden para URLs não permitidas
+            </div>
+            
+            <h3>4. ☁️ Backup Service - Resiliência</h3>
+            <div class="architecture-item">
+                <strong>Função:</strong> Backup regular dos arquivos críticos<br>
+                <strong>Proteção:</strong> Recuperação contra ataques de ransomware<br>
+                <strong>Frequência:</strong> Backups automáticos e regulares
+            </div>
+        </div>
+        
+        <h2>Defesa em Profundidade</h2>
+        <p>A arquitetura implementada segue o princípio de <strong>defesa em profundidade</strong>:</p>
+        <ul>
+            <li><strong>Múltiplas camadas de proteção</strong> - Falha de uma camada não compromete o sistema</li>
+            <li><strong>Redundância de segurança</strong> - Cada vulnerabilidade tem múltiplas mitigações</li>
+            <li><strong>Monitoramento contínuo</strong> - Logs detalhados em cada camada</li>
+        </ul>
+    </div>
+
+    <!-- Página 5: Conclusão -->
+    <div class="page">
+        <h1 class="section-title">Conclusão</h1>
+        
+        <div class="conclusion">
+            <p>O objetivo desta Sprint foi alcançado: fornecer um aplicativo de Machine Learning com segurança e resiliência demonstráveis. Iniciamos o projeto com uma aplicação funcional, mas intencionalmente vulnerável. Ao aplicar a metodologia <strong>'atacar, então defender'</strong>, conseguimos provar que vulnerabilidades como SSRF e DoS eram ativamente exploráveis, comprometendo tanto a confidencialidade quanto a disponibilidade do serviço. A solução foi a implementação de uma <strong>Defesa em Profundidade</strong>, onde cada camada de segurança tem um propósito específico. Este trabalho demonstra que a segurança deve ser uma consideração primária (Security by Design) em qualquer arquitetura de ML, garantindo que a funcionalidade de predição seja entregue de forma robusta e confiável ao usuário final.</p>
+        </div>
+        
+        <h2>🎯 Resultados Alcançados</h2>
+        <ul>
+            <li><strong>✅ Vulnerabilidades identificadas:</strong> SSRF, DoS e Ransomware</li>
+            <li><strong>✅ Mitigações implementadas:</strong> Rate limiting, validação de URL, backups</li>
+            <li><strong>✅ Arquitetura segura:</strong> Defesa em profundidade com múltiplas camadas</li>
+            <li><strong>✅ Testes de validação:</strong> Comprovação da eficácia das proteções</li>
+            <li><strong>✅ Metodologia aplicada:</strong> "Atacar, então defender"</li>
+        </ul>
+        
+        <h2>📊 Impacto do Projeto</h2>
+        <p>Este projeto demonstra a importância da <strong>segurança por design</strong> em aplicações de Machine Learning, mostrando que:</p>
+        <ul>
+            <li>Vulnerabilidades simples podem ter impactos devastadores</li>
+            <li>A metodologia "atacar, então defender" é eficaz para identificar riscos</li>
+            <li>A defesa em profundidade é essencial para sistemas críticos</li>
+            <li>A segurança deve ser considerada desde o início do desenvolvimento</li>
+        </ul>
+        
+        <div style="text-align: center; margin-top: 2em; color: #7f8c8d;">
+            <p><strong>🎓 Projeto Educacional - FIAP</strong><br>
+            Sprint 4 - Análise de Vulnerabilidades de Segurança</p>
+        </div>
+    </div>
+</body>
+</html>

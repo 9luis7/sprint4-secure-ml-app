@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            font-family: Arial, sans-serif; 
+            background: white; 
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .mermaid { 
+            text-align: center; 
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mermaid svg {
+            width: 1200px !important;
+            height: 800px !important;
+            max-width: none !important;
+            max-height: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="mermaid">
+graph TD;
+    Attacker["🕵️ Atacante"] --> Exploit["1. Explora Vulnerabilidade no Servidor"];
+    Exploit --> Server["🖥️ Servidor da Aplicação"];
+    Attacker -->|"2. Injeta Payload"| Ransomware["💀 Malware Ransomware"];
+    Ransomware -->|"3. Executa no"| Server;
+
+    subgraph "Arquivos no Servidor"
+        direction LR
+        AppFile["📄 app.py"];
+        ModelFile["🧠 model.pkl"];
+    end
+
+    Server --> Ransomware;
+    Ransomware -- "4. Criptografa Arquivos" --> AppFile & ModelFile;
+
+    subgraph "Resultado do Ataque"
+        direction LR
+        EncryptedApp["🔒 app.py.locked"];
+        EncryptedModel["🔒 model.pkl.locked"];
+    end
+    
+    AppFile --> EncryptedApp;
+    ModelFile --> EncryptedModel;
+
+    style Attacker fill:#e74c3c,stroke:#c0392b,stroke-width:3px,color:#fff
+    style Ransomware fill:#8e44ad,stroke:#7d3c98,stroke-width:3px,color:#fff
+    style EncryptedApp fill:#34495e,stroke:#2c3e50,stroke-width:3px,color:#fff
+    style EncryptedModel fill:#34495e,stroke:#2c3e50,stroke-width:3px,color:#fff
+    </div>
+    
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true, 
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: false,
+                htmlLabels: true
+            },
+            themeVariables: {
+                fontSize: '20px'
+            }
+        });
+    </script>
+</body>
+</html>

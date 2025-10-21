@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            font-family: Arial, sans-serif; 
+            background: white; 
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .mermaid { 
+            text-align: center; 
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mermaid svg {
+            width: 1200px !important;
+            height: 800px !important;
+            max-width: none !important;
+            max-height: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="mermaid">
+graph TD;
+    subgraph "Internet"
+        Attacker["🕵️ Atacante"];
+    end
+
+    subgraph "Infraestrutura do Servidor"
+        WebApp["🖥️ Nosso App Web (Vulnerável)"];
+        subgraph "Rede Interna (localhost)"
+            AdminPanel["🗄️ Painel Admin Interno"];
+        end
+    end
+
+    Attacker -- "1. Envia URL maliciosa: /predict?image_url=http://127.0.0.1/admin" --> WebApp;
+    WebApp -- "2. Requisição Forjada (SSRF) - O App acessa o recurso interno" --> AdminPanel;
+
+    style Attacker fill:#e74c3c,stroke:#c0392b,stroke-width:3px,color:#fff
+    style WebApp fill:#f39c12,stroke:#e67e22,stroke-width:3px,color:#fff
+    style AdminPanel fill:#3498db,stroke:#2980b9,stroke-width:3px,color:#fff
+    </div>
+    
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true, 
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: false,
+                htmlLabels: true
+            },
+            themeVariables: {
+                fontSize: '20px'
+            }
+        });
+    </script>
+</body>
+</html>
