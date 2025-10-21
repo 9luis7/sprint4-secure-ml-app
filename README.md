@@ -48,20 +48,20 @@ sprint4-secure-ml-app/
 
 ```mermaid
 graph TD
-    User[<i class='fa fa-user'></i> Usuário / Atacante] --> WAF[<i class='fa fa-shield-alt'></i> WAF / Firewall];
+    User["👤 Usuário / Atacante"] --> WAF["🛡️ WAF / Firewall"];
     
     subgraph "Infraestrutura do Servidor Protegida"
-        WAF --> AppServer[<i class='fa fa-server'></i> Servidor da Aplicação];
+        WAF --> AppServer["🖥️ Servidor da Aplicação"];
         subgraph AppServer
-            RateLimiter[<i class='fa fa-hourglass-half'></i> Rate Limiter (Anti-DoS)];
-            URLValidator[<i class='fa fa-check-circle'></i> Validador de URL (Anti-SSRF)];
-            MLModel[<i class='fa fa-brain'></i> Modelo de ML];
+            RateLimiter["⏱️ Rate Limiter (Anti-DoS)"];
+            URLValidator["✅ Validador de URL (Anti-SSRF)"];
+            MLModel["🧠 Modelo de ML"];
         end
         AppServer --> RateLimiter --> URLValidator --> MLModel;
     end
 
     subgraph "Resiliência"
-        BackupService[<i class='fa fa-cloud-upload-alt'></i> Serviço de Backup Externo];
+        BackupService["☁️ Serviço de Backup Externo"];
     end
 
     AppServer -- "Backups Regulares" --> BackupService;
